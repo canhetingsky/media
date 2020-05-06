@@ -1,0 +1,25 @@
+name: Merge Imgbot
+
+on:
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+  pull_request_review:
+    types:
+      - submitted
+  check_suite:
+    types:
+      - completed
+  status: {}
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: automerge
+        uses: "pascalgn/automerge-action@v0.6.1"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_LABELS: "imgbot"
+          MERGE_DELETE_BRANCH: "true"

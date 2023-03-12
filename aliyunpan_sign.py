@@ -67,13 +67,13 @@ def ServerChan_send(sendkey, title: str, desp: str = '') -> bool:
     return post_msg(url, data)
 
 
-def get_access_token():
+def get_access_token(token):
     access_token = ''
     try:
         url = "https://auth.aliyundrive.com/v2/account/token"
 
         data_dict = {
-            "refresh_token": refresh_token,
+            "refresh_token": token,
             "grant_type": "refresh_token"
         }
         headers = {
@@ -191,10 +191,17 @@ class ALiYunPan(object):
 
 
 def main():
-    access_token = get_access_token()
-    if access_token:
-        ali = ALiYunPan(access_token)
-        ali.sign_in()
+    if ',' in refresh_token:
+        tokens = refresh_token.split(',')
+    elif '，' in refresh_token:
+        tokens = refresh_token.split('，')
+    else:
+        tokens = [refresh_token]
+    for token in tokens:
+        access_token = get_access_token(token)
+        if access_token:
+            ali = ALiYunPan(access_token)
+            ali.sign_in()
 
 
 if __name__ == '__main__':
